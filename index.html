@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FashionHub | Premium Interactive Marketplace</title>
+    <style>
+        /* --- Brand Design Tokens --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Assistant, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #282c3f;
+            overflow-x: hidden;
+        }
+
+        /* --- Sticky Navigation Header --- */
+        header {
+            background-color: #ffffff;
+            position: sticky;
+            top: 0;
+            z-index: 900;
+            box-shadow: 0 4px 12px 0 rgba(0,0,0,.05);
+            height: 80px;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+        .logo span { color: #ff3f6c; }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 40px;
+        }
+
+        .nav-links button {
+            background: none;
+            border: none;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            color: #282c3f;
+            padding: 28px 0;
+            border-bottom: 4px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .nav-links button:hover, .nav-links button.active {
+            color: #ff3f6c;
+            border-bottom: 4px solid #ff3f6c;
+        }
+
+        .search-box { width: 300px; }
+        .search-box input {
+            width: 100%;
+            background: #f5f5f6;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            padding: 10px 15px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .action-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            position: relative;
+            background: none;
+            border: none;
+            color: #282c3f;
+        }
+
+        .action-item span.icon {
+            font-size: 18px;
+            margin-bottom: 2px;
+        }
+
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -2px;
+            background-color: #ff3f6c;
+            color: white;
+            font-size: 10px;
+            padding: 1px 6px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        
+        .wishlist-badge { background-color: #282c3f; }
+
+        /* --- Interactive Sale/Offers Slider --- */
+        .slider-container {
+            max-width: 1400px;
+            margin: 20px auto 0;
+            padding: 0 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slider {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            width: 300%;
+        }
+
+        .slide {
+            width: 100%;
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 60px;
+            border-radius: 8px;
+            color: white;
+        }
+
+        .slide-1 { background: linear-gradient(135deg, #f43f5e, #ec4899); }
+        .slide-2 { background: linear-gradient(135deg, #8b5cf6, #d946ef); }
+        .slide-3 { background: linear-gradient(135deg, #06b6d4, #3b82f6); }
+
+        .slide-text h2 { font-size: 32px; font-weight: 800; margin-bottom: 5px; text-transform: uppercase; }
+        .slide-text p { font-size: 16px; opacity: 0.9; }
+        .slide-graphic { font-size: 60px; }
+
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .prev-btn { left: 55px; }
+        .next-btn { right: 55px; }
+
+        /* --- Application Layout Grid --- */
+        .container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 40px;
+            display: flex;
+            gap: 40px;
+        }
+
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            border-right: 1px solid #edebef;
+            padding-right: 20px;
+        }
+
+        .filter-title {
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #edebef;
+        }
+
+        .filter-group { margin-bottom: 25px; }
+        .filter-group h4 { font-size: 14px; text-transform: uppercase; margin-bottom: 12px; }
+        .filter-label { display: flex; align-items: center; gap: 10px; font-size: 14px; margin-bottom: 8px; cursor: pointer; }
+
+        .content-area { flex-grow: 1; }
+        .results-header { font-size: 18px; font-weight: 700; text-transform: uppercase; margin-bottom: 20px; }
+        .results-header span { color: #7e818c; font-size: 14px; font-weight: 400; text-transform: none; }
+
+        /* --- Myntra Product UI Card Architecture --- */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 30px;
+        }
+
+        .product-card {
+            background: #ffffff;
+            position: relative;
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .product-card:hover {
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            border-color: #f5f5f6;
+        }
+
+        .image-wrapper {
+            height: 280px;
+            position: relative;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 65px;
+            user-select: none;
+        }
+
+        /* Native Wishlist Overlay Button */
+        .wishlist-icon-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: white;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+            z-index: 5;
+        }
+        .wishlist-icon-btn:hover { transform: scale(1.1); }
+        .wishlist-icon-btn.active { color: #ff3f6c; }
+
+        .rating-tag {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(255,255,255,0.9);
+            padding: 2px 6px;
+            font-size: 12px;
+            font-weight: 700;
+            border-radius: 2px;
+        }
+        .rating-tag span { color: #14c2a4; }
+
+        .product-details { padding: 12px 10px; position: relative; background: white; }
+        .brand-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+        .product-name { font-size: 14px; color: #535665; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .price-container { display: flex; align-items: center; gap: 6px; font-size: 14px; margin-bottom: 8px; }
+        .current-price { font-weight: 700; color: #282c3f; }
+        .original-price { text-decoration: line-through; color: #7e818c; font-size: 12px; }
+        .discount-pct { color: #ff905a; font-size: 12px; font-weight: 700; }
+
+        /* Actions layout on hover */
+        .card-actions-hover {
+            opacity: 0;
+            position: absolute;
+            bottom: 12px;
+            left: 0;
+            width: 100%;
+            padding: 0 10px;
+            background: white;
+            transition: opacity 0.2s;
+            z-index: 10;
+        }
+        .product-card:hover .card-actions-hover { opacity: 1; }
+
+        .btn-add-bag {
+            width: 100%;
+            background-color: #ff3f6c;
+            color: white;
+            border: none;
+            padding: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+        .btn-add-bag:hover { background-color: #e63962; }
+
+        /* --- Panel Side Slide Drawers System --- */
+        .drawer {
+            position: fixed;
+            top: 0;
+            right: -420px;
+            width: 400px;
+            max-width: 100vw;
+            height: 100vh;
+            background: white;
+            box-shadow: -5px 0 25px rgba(0,0,0,0.1);
+            z-index: 1000;
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+        }
+
+        .drawer.open { right: 0; }
+        .drawer-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eaeaec; padding-bottom: 15px; font-size: 16px; font-weight: 700; text-transform: uppercase; }
+        .close-drawer-btn { font-size: 28px; cursor: pointer; background: none; border: none; color: #7e818c; }
+        .drawer-content { flex-grow: 1; overflow-y: auto; padding-top: 15px; }
+
+        /* List Items styling inside panels */
+        .panel-item {
+            display: flex;
+            gap: 15px;
+            border-bottom: 1px solid #f5f5f6;
+            padding: 15px 0;
+            position: relative;
+        }
+        .panel-item-img { font-size: 32px; background: #f5f5f5; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 4px;}
+        .panel-item-info { flex-grow: 1; }
+        .panel-item-info h4 { font-size: 14px; font-weight: 700; margin-bottom: 2px;}
+        .panel-item-info p { font-size: 12px; color: #535665; margin-bottom: 4px;}
+        .panel-item-info .price { font-size: 13px; font-weight: 700; }
+        
+        .panel-item-actions { display: flex; flex-direction: column; gap: 8px; justify-content: center; }
+        .btn-text-action { background: none; border: none; color: #ff3f6c; cursor: pointer; font-size: 12px; font-weight: 700; text-align: right;}
+        .btn-text-action.secondary { color: #282c3f; }
+
+        /* Profile Inputs */
+        .profile-form-group { margin-bottom: 15px; }
+        .profile-form-group label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 5px; text-transform: uppercase; color: #7e818c; }
+        .profile-form-group input, .profile-form-group textarea { width: 100%; border: 1px solid #d4d5d9; padding: 10px; border-radius: 4px; font-size: 14px; outline: none; }
+        .profile-form-group input:focus { border-color: #ff3f6c; }
+        .btn-save-profile { width: 100%; background: #282c3f; color: white; padding: 12px; font-weight: 700; text-transform: uppercase; border: none; border-radius: 4px; cursor: pointer; }
+        
+        .drawer-footer { border-top: 1px solid #eaeaec; padding-top: 15px; }
+        .btn-action-primary { width: 100%; background: #ff3f6c; color: white; padding: 14px; font-weight: 700; text-transform: uppercase; border: none; border-radius: 4px; cursor: pointer; letter-spacing: 0.5px;}
+
+        .overlay { position: fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.3); z-index:950; display:none; }
+        .overlay.active { display:block; }
+
+        @media (max-width: 900px) { .sidebar, .search-box { display: none; } .navbar { padding: 0 20px; } }
+    </style>
+</head>
+<body>
+
+    <div class="overlay" id="screenOverlay"></div>
+
+    <header>
+        <nav class="navbar">
+            <div class="logo" onclick="changeCategory('men')">Fashion<span>Hub</span></div>
+            <ul class="nav-links">
+                <li><button id="btn-men" class="active" onclick="changeCategory('men')">Men</button></li>
+                <li><button id="btn-women" onclick="changeCategory('women')">Women</button></li>
+                <li><button id="btn-kids" onclick="changeCategory('kids')">Kids</button></li>
+            </ul>
+            
+            <div class="search-box">
+                <input type="text" placeholder="Search for products, brands and more">
+            </div>
+
+            <div class="nav-actions">
+                <button class="action-item" onclick="toggleDrawer('profileDrawer', true)">
+                    <span class="icon">👤</span>Profile
+                </button>
+                <button class="action-item" onclick="toggleDrawer('wishlistDrawer', true)">
+                    <span class="icon">❤️</span>Wishlist
+                    <span class="badge wishlist-badge" id="wishlistBadge">0</span>
+                </button>
+                <button class="action-item" id="bagBtn" onclick="toggleDrawer('bagDrawer', true)">
+                    <span class="icon">👜</span>Bag 
+                    <span class="badge" id="bagBadge">0</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <section class="slider-container">
+        <button class="slider-btn prev-btn" onclick="moveSlide(-1)">&#10094;</button>
+        <button class="slider-btn next-btn" onclick="moveSlide(1)">&#10095;</button>
+        <div class="slider" id="slider">
+            <div class="slide slide-1">
+                <div class="slide-text">
+                    <h2>EOSS Mega Sale</h2>
+                    <p>Flat 60% OFF on Premium Brand Fashion</p>
+                </div>
+                <div class="slide-graphic">🛍️</div>
+            </div>
+            <div class="slide slide-2">
+                <div class="slide-text">
+                    <h2>Midnight Coupon</h2>
+                    <p>Extra Rs. 500 OFF on orders above Rs. 2999 | Code: NIGHTOWL</p>
+                </div>
+                <div class="slide-graphic">⚡</div>
+            </div>
+            <div class="slide slide-3">
+                <div class="slide-text">
+                    <h2>Bank CashBack Offer</h2>
+                    <p>Instant 10% CashBack using HDFC Debit & Credit Cards</p>
+                </div>
+                <div class="slide-graphic">💳</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="filter-title">Filters</div>
+            <div class="filter-group">
+                <h4>Price Range</h4>
+                <label class="filter-label"><input type="checkbox"> Rs. 499 to Rs. 999</label>
+                <label class="filter-label"><input type="checkbox"> Rs. 999 to Rs. 1999</label>
+            </div>
+            <div class="filter-group">
+                <h4>Discount Range</h4>
+                <label class="filter-label"><input type="checkbox"> 50% and above</label>
+                <label class="filter-label"><input type="checkbox"> 60% and above</label>
+            </div>
+        </aside>
+
+        <main class="content-area">
+            <div class="results-header" id="gridTitle">Men's Apparel <span>- Loading Items</span></div>
+            <div class="product-grid" id="productGridContainer">
+                </div>
+        </main>
+    </div>
+
+    <div class="drawer" id="wishlistDrawer">
+        <div class="drawer-header">
+            <h3>My Wishlist ❤️</h3>
+            <button class="close-drawer-btn" onclick="toggleDrawer('wishlistDrawer', false)">&times;</button>
+        </div>
+        <div class="drawer-content" id="wishlistItemsContainer">
+            </div>
+    </div>
+
+    <div class="drawer" id="bagDrawer">
+        <div class="drawer-header">
+            <h3>Shopping Bag 👜</h3>
+            <button class="close-drawer-btn" onclick="toggleDrawer('bagDrawer', false)">&times;</button>
+        </div>
+        <div class="drawer-content" id="bagItemsContainer">
+            </div>
+        <div class="drawer-footer">
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-weight:700;">
+                <span>Total Bag Amount:</span>
+                <span id="bagTotal">Rs. 0</span>
+            </div>
+            <button class="btn-action-primary" onclick="checkoutSecure()">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <div class="drawer" id="profileDrawer">
+        <div class="drawer-header">
+            <h3>User Profile & Address</h3>
+            <button class="close-drawer-btn" onclick="toggleDrawer('profileDrawer', false)">&times;</button>
+        </div>
+        <div class="drawer-content">
+            <div class="profile-form-group">
+                <label>Customer Name</label>
+                <input type="text" id="profName" value="Rahul Sharma">
+            </div>
+            <div class="profile-form-group">
+                <label>Mobile Number</label>
+                <input type="text" id="profPhone" value="+91 98765 43210">
+            </div>
+            <div class="profile-form-group">
+                <label>Shipping Address</label>
+                <textarea id="profAddress" rows="4">Flat No 405, Sapphire Heights, Sector 5, HSR Layout, Bangalore, Karnataka - 560102</textarea>
+            </div>
+            <button class="btn-save-profile" onclick="saveUserProfile()">Save Account Data</button>
+        </div>
+    </div>
+
+    <script>
+        // Centralized Global Mock Catalog Database Architecture
+        const catalog = {
+            men: [
+                { id: 'm1', brand: 'Roadster', title: 'Pure Cotton Slim Fit Tee', price: 499, orig: 1099, pct: '55% OFF', rating: '4.2', icon: '👕' },
+                { id: 'm2', brand: 'HRX by Hrithik', title: 'Rapid Dry Workout Jersey', price: 649, orig: 1299, pct: '50% OFF', rating: '4.5', icon: '👟' },
+                { id: 'm3', brand: 'Puma', title: 'Classic Printed Crewneck Sweatshirt', price: 1299, orig: 2999, pct: '56% OFF', rating: '4.1', icon: '🧥' },
+                { id: 'm4', brand: 'Wrogn', title: 'Checked Casual Denim Shirt', price: 1199, orig: 2499, pct: '52% OFF', rating: '3.9', icon: '👔' }
+            ],
+            women: [
+                { id: 'w1', brand: 'Anouk', title: 'Printed Mandarin Ethnic Kurta', price: 799, orig: 1999, pct: '60% OFF', rating: '4.4', icon: '👗' },
+                { id: 'w2', brand: 'Tokyo Talkies', title: 'High-Rise Relaxed Boyfriend Jeans', price: 999, orig: 2499, pct: '60% OFF', rating: '4.0', icon: '👖' },
+                { id: 'w3', brand: 'Biba', title: 'Solid Border Dupatta Set', price: 2199, orig: 4999, pct: '56% OFF', rating: '4.6', icon: '👚' },
+                { id: 'w4', brand: 'Forever 21', title: 'Ribbed Knit Cropped Top', price: 599, orig: 1199, pct: '50% OFF', rating: '4.2', icon: '👒' }
+            ],
+            kids: [
+                { id: 'k1', brand: 'U.S. Polo Kids', title: 'Striped Cotton Polo Jersey', price: 699, orig: 1499, pct: '53% OFF', rating: '4.3', icon: '🧸' },
+                { id: 'k2', brand: 'Gini & Jony', title: 'Active Play Denim Dungarees', price: 1049, orig: 2299, pct: '54% OFF', rating: '4.1', icon: '🎨' },
+                { id: 'k3', brand: 'YK', title: 'Superhero Printed Pyjama Set', price: 449, orig: 999, pct: '55% OFF', rating: '4.5', icon: '🚀' },
+                { id: 'k4', brand: 'Allen Solly Junior', title: 'Party Wear Chambray Blazer', price: 1799, orig: 3999, pct: '55% OFF', rating: '4.2', icon: '👔' }
+            ]
+        };
+
+        // Application State memory stores
+        let activeCategory = 'men';
+        let shoppingBag = [];
+        let wishlist = [];
+        let currentSlide = 0;
+
+        // --- Slider Component Logic ---
+        function moveSlide(direction) {
+            const sliderEl = document.getElementById('slider');
+            currentSlide = (currentSlide + direction + 3) % 3;
+            sliderEl.style.transform = `translateX(-${currentSlide * 33.333}%)`;
+        }
+        setInterval(() => moveSlide(1), 6000); // Auto slider loop
+
+        // --- Drawer Panel Display Toggles ---
+        function toggleDrawer(drawerId, open) {
+            const drawer = document.getElementById(drawerId);
+            const overlay = document.getElementById('screenOverlay');
+            if (open) {
+                drawer.classList.add('open');
+                overlay.classList.add('active');
+            } else {
+                drawer.classList.remove('open');
+                overlay.classList.remove('active');
+            }
+        }
+        document.getElementById('screenOverlay').addEventListener('click', () => {
+            toggleDrawer('profileDrawer', false);
+            toggleDrawer('wishlistDrawer', false);
+            toggleDrawer('bagDrawer', false);
+        });
+
+        // --- Storefront Catalog View Renderer Engine ---
+        function changeCategory(catKey) {
+            activeCategory = catKey;
+            document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${catKey}`).classList.add('active');
+
+            document.getElementById('gridTitle').innerHTML = `${catKey.toUpperCase()}'s Collection <span>- ${catalog[catKey].length} Items Found</span>`;
+
+            const gridContainer = document.getElementById('productGridContainer');
+            gridContainer.innerHTML = '';
+
+            catalog[catKey].forEach(product => {
+                const isWishlisted = wishlist.some(item => item.id === product.id);
+                const card = document.createElement('div');
+                card.classList.add('product-card');
+                card.innerHTML = `
+                    <div class="image-wrapper">${product.icon}
+                        <button class="wishlist-icon-btn ${isWishlisted ? 'active' : ''}" onclick="toggleWishlistState('${product.id}')">
+                            ${isWishlisted ? '❤️' : '🤍'}
+                        </button>
+                        <div class="rating-tag">${product.rating} <span>★</span></div>
+                    </div>
+                    <div class="product-details">
+                        <div class="brand-name">${product.brand}</div>
+                        <div class="product-name">${product.title}</div>
+                        <div class="price-container">
+                            <span class="current-price">Rs. ${product.price}</span>
+                            <span class="original-price">Rs. ${product.orig}</span>
+                            <span class="discount-pct">(${product.pct})</span>
+                        </div>
+                        <div class="card-actions-hover">
+                            <button class="btn-add-bag" onclick="addItemToBag('${product.id}')">Add to Bag</button>
+                        </div>
+                    </div>
+                `;
+                gridContainer.appendChild(card);
+            });
+        }
+
+        // Search catalog data object directly by product key string matches
+        function findProductGlobal(id) {
+            return [...catalog.men, ...catalog.women, ...catalog.kids].find(p => p.id === id);
+        }
+
+        // --- Integrated Wishlist Handling State Engine ---
+        function toggleWishlistState(id) {
+            const product = findProductGlobal(id);
+            const index = wishlist.findIndex(item => item.id === id);
+
+            if (index > -1) {
+                wishlist.splice(index, 1); // Remove if matching
+            } else {
+                wishlist.push(product); // Append if missing
+            }
+            renderWishlistUI();
+            changeCategory(activeCategory); // Sync heart visual changes back to layout grid
+        }
+
+        function renderWishlistUI() {
+            document.getElementById('wishlistBadge').textContent = wishlist.length;
+            const container = document.getElementById('wishlistItemsContainer');
+            container.innerHTML = '';
+
+            if (wishlist.length === 0) {
+                container.innerHTML = `<p style="text-align:center; color:#7e818c; margin-top:30px;">Your wishlist is completely empty.</p>`;
+                return;
+            }
+
+            wishlist.forEach(item => {
+                const itemEl = document.createElement('div');
+                itemEl.classList.add('panel-item');
+                itemEl.innerHTML = `
+                    <div class="panel-item-img">${item.icon}</div>
+                    <div class="panel-item-info">
+                        <h4>${item.brand}</h4>
+                        <p>${item.title}</p>
+                        <span class="price">Rs. ${item.price}</span>
+                    </div>
+                    <div class="panel-item-actions">
+                        <button class="btn-text-action" onclick="moveFromWishToBag('${item.id}')">Move To Bag</button>
+                        <button class="btn-text-action secondary" onclick="toggleWishlistState('${item.id}')">Delete</button>
+                    </div>
+                `;
+                container.appendChild(itemEl);
+            });
+        }
+
+        function moveFromWishToBag(id) {
+            addItemToBag(id); // Run standard array push
+            toggleWishlistState(id); // Strip item out of wishlist
+            toggleDrawer('wishlistDrawer', false);
+        }
+
+        // --- Shopping Bag (Cart) Logic Engine ---
+        function addItemToBag(id) {
+            const product = findProductGlobal(id);
+            const existingBagItem = shoppingBag.find(item => item.id === id);
+
+            if (existingBagItem) {
+                existingBagItem.qty += 1;
+            } else {
+                shoppingBag.push({ ...product, qty: 1 });
+            }
+            renderBagUI();
+            toggleDrawer('bagDrawer', true); // Open bag panel automatically when added
+        }
+
+        function updateBagQty(id, changes) {
+            const item = shoppingBag.find(i => i.id === id);
+            if (!item) return;
+            item.qty += changes;
+            if (item.qty <= 0) {
+                shoppingBag = shoppingBag.filter(i => i.id !== id);
+            }
+            renderBagUI();
+        }
+
+        function renderBagUI() {
+            const totalItemCount = shoppingBag.reduce((acc, item) => acc + item.qty, 0);
+            document.getElementById('bagBadge').textContent = totalItemCount;
+
+            const container = document.getElementById('bagItemsContainer');
+            container.innerHTML = '';
+
+            if (shoppingBag.length === 0) {
+                container.innerHTML = `<p style="text-align:center; color:#7e818c; margin-top:30px;">Your shopping bag is empty.</p>`;
+            } else {
+                shoppingBag.forEach(item => {
+                    const el = document.createElement('div');
+                    el.classList.add('panel-item');
+                    el.innerHTML = `
+                        <div class="panel-item-img">${item.icon}</div>
+                        <div class="panel-item-info">
+                            <h4>${item.brand}</h4>
+                            <p>${item.title}</p>
+                            <span class="price">Rs. ${item.price} (Qty: ${item.qty})</span>
+                        </div>
+                        <div class="panel-item-actions">
+                            <button class="btn-text-action" onclick="updateBagQty('${item.id}', -1)">➖ Less</button>
+                            <button class="btn-text-action" onclick="updateBagQty('${item.id}', 1)">➕ Add</button>
+                        </div>
+                    `;
+                    container.appendChild(el);
+                });
+            }
+
+            const totalBill = shoppingBag.reduce((acc, item) => acc + (item.price * item.qty), 0);
+            document.getElementById('bagTotal').textContent = `Rs. ${totalBill}`;
+        }
+
+        // --- Profile Handler Hooks ---
+        function saveUserProfile() {
+            alert(`Customer Address Profile Data Saved Successfully.`);
+            toggleDrawer('profileDrawer', false);
+        }
+
+        function checkoutSecure() {
+            if (shoppingBag.length === 0) {
+                alert('Your Bag is empty!');
+                return;
+            }
+            const address = document.getElementById('profAddress').value;
+            alert(`Order Successful!\n\nDispatched to address:\n${address}`);
+            shoppingBag = [];
+            renderBagUI();
+            toggleDrawer('bagDrawer', false);
+        }
+
+        // Bootstrap App Init
+        window.onload = () => { changeCategory('men'); };
+    </script>
+</body>
+</html>
