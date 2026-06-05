@@ -188,7 +188,7 @@ Refresh the URL multiple times — each refresh should show a different hostname
 All manual steps above are fully automated via AWS CLI scripts in the `scripts/` directory.
 
 ### Quick start
-
+```
 #!/bin/bash
 set -e
 
@@ -206,7 +206,7 @@ rm -rf "$TEMP_DIR"
 
 sudo chown -R apache:apache /var/www/html
 sudo chmod -R 755 /var/www/html
-
+```
 ### Script reference
 
 | Script | Purpose |
