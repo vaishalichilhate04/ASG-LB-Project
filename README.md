@@ -6,6 +6,8 @@ A practical walkthrough and automation scripts for setting up an **Application L
 
 ---
 
+![ASG-LB Project Screenshot](https://raw.githubusercontent.com/vaishalichilhate04/ASG-LB-Project/main/Screenshot%20(74).png)
+
 ## Table of Contents
 
 1. [Architecture Overview](#architecture-overview)
