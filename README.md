@@ -189,20 +189,23 @@ All manual steps above are fully automated via AWS CLI scripts in the `scripts/`
 
 ### Quick start
 
-```bash
-# 1. Make scripts executable
-chmod +x scripts/*.sh
+#!/bin/bash
+set -e
 
-# 2. Edit configuration variables at the top of the script you want to run
-#    (REGION, KEY_NAME, SG_ID, SUBNET_1, SUBNET_2)
-nano scripts/setup-alb.sh   # or setup-asg.sh
+sudo dnf update -y
+sudo dnf install git httpd -y
 
-# 3a. Deploy ALB + 2 static instances
-./scripts/setup-alb.sh
+sudo systemctl start httpd
+sudo systemctl enable httpd
 
-# 3b. — OR — Deploy ASG + ALB
-./scripts/setup-asg.sh
-```
+TEMP_DIR=$(mktemp -d)
+git clone https://github.com/vaishalichilhate04/ASG-LB-Project.git "$TEMP_DIR"
+
+sudo cp "$TEMP_DIR/index.html" /var/www/html/
+rm -rf "$TEMP_DIR"
+
+sudo chown -R apache:apache /var/www/html
+sudo chmod -R 755 /var/www/html
 
 ### Script reference
 
