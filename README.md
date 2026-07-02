@@ -233,6 +233,50 @@ sudo chmod -R 755 /var/www/html
 ./scripts/cleanup-asg.sh
 ```
 
+## ⚙️ Challenges & Debugging
+
+### 🧩 EC2 Connectivity Issues
+**Problem:** Couldn’t SSH into instances.  
+**Solution:** Updated Security Group to allow inbound TCP 22 (SSH).
+
+---
+
+### 💡 Load Balancer Health Check Failures
+**Problem:** ALB showed unhealthy targets.  
+**Solution:** Corrected health check path to `/index.html` and ensured Apache was running.
+
+---
+
+### 🔁 Auto Scaling Group Not Launching New Instances
+**Problem:** ASG failed to replace terminated instances.  
+**Solution:** Fixed Launch Template configuration (AMI, Key Pair, and Security Group).
+
+---
+
+### 🔐 IAM Permission Errors
+**Problem:** CLI scripts failed due to insufficient permissions.  
+**Solution:** Attached EC2, ELB, and AutoScaling policies to IAM user.
+
+---
+
+## 📦 Deliverables
+
+| 📁 Item | 📋 Description |
+|----------|----------------|
+| **Architecture Diagram (.drawio)** | Visual representation of ALB and ASG setup using AWS icons. |
+| **README.md (Enhanced)** | Interactive documentation explaining architecture, setup steps, and troubleshooting. |
+| **Scripts Folder** | Includes automation scripts: `setup-alb.sh`, `setup-asg.sh`, and `cleanup.sh`. |
+| **Cost Optimization Notes** | Spot Instances, S3 lifecycle policies, and efficient scaling parameters. |
+| **Security Notes** | IAM roles, Security Group rules, encryption, and least‑privilege access. |
+| **Scalability Notes** | ASG configuration (min=1, desired=2, max=3) and CloudWatch alarms for dynamic scaling. |
+| **Final Presentation Slides** | Summary of architecture, implementation, challenges, and outcomes. |
+
+---
+
+✅ **Tip:**  
+Include screenshots of your architecture diagrams and CLI outputs under each section for a more interactive and visually appealing README.
+
+  
 ---
 
 ## Key Concepts
