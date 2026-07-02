@@ -22,7 +22,7 @@ A practical walkthrough and automation scripts for setting up an **Application L
 ---
 
 ## Architecture Overview
-
+! [ASG-LB Project](https://github.com/vaishalichilhate04/ASG-LB-Project/blob/main/ASG1.png)
 ```
                           Internet
                               │
