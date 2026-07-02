@@ -273,8 +273,7 @@ sudo chmod -R 755 /var/www/html
 
 ---
 
-✅ **Tip:**  
-Include screenshots of your architecture diagrams and CLI outputs under each section for a more interactive and visually appealing README.
+  
 
   
 ---
